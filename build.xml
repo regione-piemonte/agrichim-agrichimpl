@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="${componente}" default="all-target">
+	<description>Build file del componente pmcomutility</description>
+
+	<property file="buildfiles/build.properties"/>
+
+	<target name="all-target" description="Lancia il build per le varie distribuzioni in sequenza">
+		<antcall target="distribution">
+			<param name="target" value="coll-${linea.cliente}-${istanza.cliente}"/>
+		</antcall>
+		<antcall target="distribution">
+			<param name="target" value="prod-${linea.cliente}-${istanza.cliente}"/>
+		</antcall>
+	</target>
+
+	<target name="distribution" >		
+		<delete dir="${dir.build}/temp" />
+		<mkdir dir="${dir.build}/temp" />
+
+		<delete dir="${dir.dist}/${target}" /> 
+		<mkdir dir="${dir.dist}/${target}" />
+
+		<zip destfile = "${dir.dist}/${target}/${componente}-${versione}.zip" basedir="${dir.src}" update="true"/>
+
+		<delete dir="${dir.build}/temp" />
+		<delete dir="${dir.build}" />		
+	</target>
+
+	<target name="clean-all" description="Rimuove le cartelle temporanee." depends="clean-dist, clean-temp">
+	</target>
+
+	<target name="clean-temp" description="Rimuove la cartella dei files temporanei di build.">
+		<delete dir="${dir.build}" />
+	</target>
+
+	<target name="clean-dist" description="Rimuove la cartella delle distribuzioni.">
+		<delete dir="${dir.dist}"/>
+	</target> 
+
+</project>
